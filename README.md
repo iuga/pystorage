@@ -39,7 +39,7 @@ There are a few services that you get out of the box. All of these are contained
 - **GZipPickleStorageService** `STORAGE_PICKLE_GZIP`: This service provides a mechanism for serializing and deserializing a group of objects into disk using the pickle protocol and compressing it using Lempel-Ziv coding (GZIP). This method should be slower than the pickle storage but should save some disk space.
 - **VolatileStorageService** `STORAGE_VOLATILE`: Dictionary storage with auto-expiring values for caching purposes. Expiration happens on any access, object is locked during cleanup from expired values.
 
-## Use-Case
+## Use-Case: Simple Storage
 Let's store our dictionary information in `json` format:
 ```python
 >>> from pystorage.storage_provider import StorageProvider
@@ -69,3 +69,22 @@ While if we want to remove the entry:
 >>> storage['some_key']
 ```
 Will raise a `KeyError` exception because the key does not exist anymore.
+
+## Use-Case: Storage with expiration (Volatile)
+Let's store our dictionary information using any provider, like `pickle`, but removing the data after some provided expiration time in seconds:
+
+```python
+>>> from pystorage.storage_provider import StorageProvider
+>>> pkl_storage = StorageProvider().create(StorageProvider.STORAGE_PICKLE)
+>>> storage = StorageProvider().create(
+        StorageProvider.STORAGE_VOLATILE,
+        storage=pkl_storage,
+        expiration=5
+    )
+>>> storage['key'] = 'value'
+>>> storage['key']
+```
+```
+'value'
+```
+After 5 seconds the same command will raise a `KeyError` and the pickle file will not exist anymore.

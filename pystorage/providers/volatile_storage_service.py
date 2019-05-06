@@ -20,7 +20,7 @@ class VolatileStorageService(StorageService):
 
     Note: Iteration over dict and also keys() do not remove expired values!
     """
-    def __init__(self, expiration=3600):
+    def __init__(self, storage={}, expiration=3600):
         """
         Initialize the Storage with a Thread locking mechanism. Also, sets the expiration in
         seconds. The stored values not live more than that time.
@@ -28,7 +28,7 @@ class VolatileStorageService(StorageService):
         :param expiration: seconds to keep the value alive.
         """
         self.expiration = expiration
-        self.storage = {}
+        self.storage = storage
         self.lock = RLock()
 
     def __getitem__(self, key):
@@ -41,6 +41,9 @@ class VolatileStorageService(StorageService):
         """
         with self.lock:
             value = self.storage[key]
+            print(time())
+            print(value[0])
+            print(time() - value[0])
             if (time() - value[0]) > self.expiration:
                 del self.storage[key]
                 raise KeyError(key)

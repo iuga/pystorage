@@ -23,7 +23,7 @@ class PickleStorageService(StorageService):
     data = storage['hello']       # < /tmp/test/hello.storage.pkl (read)
 
     """
-    def __init__(self, path, suffix='storage.pkl'):
+    def __init__(self, path='/tmp/', suffix='storage.pkl'):
         self.path = path
         self.suffix = suffix
 
@@ -38,7 +38,7 @@ class PickleStorageService(StorageService):
         try:
             with open(filename, 'rb') as pf:
                 content = load(pf)
-        except (KeyError, IOError, PickleError, AttributeError, EOFError, ImportError, IndexError):
+        except (KeyError, FileNotFoundError, IOError, PickleError, AttributeError, EOFError, ImportError, IndexError):
             reraise(KeyError, KeyError("Error opening the content from {}".format(filename)), exc_info()[2])
         return content
 
