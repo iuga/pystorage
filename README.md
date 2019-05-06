@@ -89,3 +89,24 @@ Let's store our dictionary information using any provider, like `pickle`, but re
 'value'
 ```
 After 5 seconds the same command will raise a `KeyError` and the pickle file will not exist anymore.
+
+## Use-Case: Store files on Amazon S3
+Let's use AWS S3 storage to save and load files from a specific bucket:
+```python
+>>> from pystorage.storage_provider import StorageProvider
+>>> pkl_storage = StorageProvider().create(
+        StorageProvider.STORAGE_S3,
+        bucket='my.bucket',
+        folder='some/folder/'
+    )
+>>> with open('test.html', 'rb') as fp:
+        storage['test.html'] = fp.read()
+>>> 'test.html' in storage
+```
+```
+True
+```
+```python
+>>> with open('test_download.html', 'wb') as fp:
+        fp.write(storage['test.html'])
+```
