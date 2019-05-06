@@ -22,7 +22,7 @@ class JSONStorageService(StorageService):
     data = storage['hello']       # < /tmp/test/hello.storage.json (read)
 
     """
-    def __init__(self, path, suffix='storage.json'):
+    def __init__(self, path='/tmp', suffix='storage.json'):
         self.path = path
         self.suffix = suffix
 

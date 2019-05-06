@@ -13,6 +13,8 @@ pip install git+https://github.com/iuga/pystorage.git
 The `StorageProvider` class a factory instance that you should use to create and instantiate new Services.
 
 ```python
+from pystorage.storage_provider import StorageProvider
+
 # Create a new instance of a LRU Storage Service:
 service = StorageProvider().create(
     StorageProvider.STORAGE_LRU,
@@ -36,3 +38,34 @@ There are a few services that you get out of the box. All of these are contained
 - **PickleStorageService** `STORAGE_PICKLE`: This service provides a mechanism for serializing and deserializing a group of objects into disk using the pickle protocol.
 - **GZipPickleStorageService** `STORAGE_PICKLE_GZIP`: This service provides a mechanism for serializing and deserializing a group of objects into disk using the pickle protocol and compressing it using Lempel-Ziv coding (GZIP). This method should be slower than the pickle storage but should save some disk space.
 - **VolatileStorageService** `STORAGE_VOLATILE`: Dictionary storage with auto-expiring values for caching purposes. Expiration happens on any access, object is locked during cleanup from expired values.
+
+## Use-Case
+Let's store our dictionary information in `json` format:
+```python
+>>> from pystorage.storage_provider import StorageProvider
+>>> storage = StorageProvider().create(StorageProvider.STORAGE_JSON)
+>>> storage['some_key'] = {
+        'text': 'Hello World!'
+    }
+>>> storage['some_key']
+```
+```
+{'text': 'Hello World!'}
+```
+While the file `/tmp/some_key.storage.json` contains:
+```
+{"text": "Hello World!"}
+```
+We can check the size of the storage:
+```python
+>>> len(storage)
+```
+```
+1
+```
+While if we want to remove the entry:
+```python
+>>> del storage['some_key']
+>>> storage['some_key']
+```
+Will raise a `KeyError` exception because the key does not exist anymore.

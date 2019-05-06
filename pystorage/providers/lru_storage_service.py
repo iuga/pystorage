@@ -1,5 +1,5 @@
 from pylru import lrucache
-from providers import StorageService
+from pystorage.providers.storage_service import StorageService
 
 
 class LRUStorageService(StorageService):
