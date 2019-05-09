@@ -41,9 +41,6 @@ class VolatileStorageService(StorageService):
         """
         with self.lock:
             value = self.storage[key]
-            print(time())
-            print(value[0])
-            print(time() - value[0])
             if (time() - value[0]) > self.expiration:
                 del self.storage[key]
                 raise KeyError(key)

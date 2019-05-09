@@ -38,6 +38,7 @@ There are a few services that you get out of the box. All of these are contained
 - **PickleStorageService** `STORAGE_PICKLE`: This service provides a mechanism for serializing and deserializing a group of objects into disk using the pickle protocol.
 - **GZipPickleStorageService** `STORAGE_PICKLE_GZIP`: This service provides a mechanism for serializing and deserializing a group of objects into disk using the pickle protocol and compressing it using Lempel-Ziv coding (GZIP). This method should be slower than the pickle storage but should save some disk space.
 - **S3StorageService** `STORAGE_S3`: This service provides a mechanism for serializing and deserializing a group of binary objects on AWS S3.
+- **DiskLRUStorageService** `STORAGE_DISKLRU`: Set a file count limit and remove the least recently used file when the limit is reached.
 - **VolatileStorageService** `STORAGE_VOLATILE`: Dictionary storage with auto-expiring values for caching purposes. Expiration happens on any access, object is locked during cleanup from expired values.
 
 ## Use-Case: Simple Storage
@@ -109,4 +110,20 @@ True
 ```python
 >>> with open('test_download.html', 'wb') as fp:
         fp.write(storage['test.html'])
+```
+
+## Use-Case: Store with a file count limit
+Special for cases when your local storage is limited, you can use this method to storage files locally until you reach a desired file count limit. When this limit is reached the least recenlty used key is removed to make space.
+```python
+>>> from pystorage.storage_provider import StorageProvider
+>>> storage = StorageProvider().create(
+        StorageProvider.STORAGE_DISKLRU
+        limit=100
+    )
+>>> for i in range(0, 150):
+>>>     storage[f'key.{i}'] = f'value.{i}'
+>>> len(storage)
+```
+```
+100
 ```

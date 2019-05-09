@@ -5,6 +5,7 @@ from pystorage.providers.lru_storage_service import LRUStorageService
 from pystorage.providers.json_storage_service import JSONStorageService
 from pystorage.providers.pickle_storage_service import PickleStorageService
 from pystorage.providers.s3_storage_service import S3StorageService
+from pystorage.providers.disklru_storage_service import DiskLRUStorageService
 
 
 class StorageProvider(object):
@@ -21,6 +22,7 @@ class StorageProvider(object):
     STORAGE_PICKLE_GZIP = 'storage.pickle.gzip'
     STORAGE_VOLATILE = 'storage.volatile'
     STORAGE_S3 = 'storage.s3'
+    STORAGE_DISKLRU = 'storage.disklru'
 
     def __init__(self):
         """
@@ -32,7 +34,8 @@ class StorageProvider(object):
             self.STORAGE_LRU: LRUStorageService,
             self.STORAGE_JSON: JSONStorageService,
             self.STORAGE_PICKLE: PickleStorageService,
-            self.STORAGE_S3: S3StorageService
+            self.STORAGE_S3: S3StorageService,
+            self.STORAGE_DISKLRU: DiskLRUStorageService
         }
 
     def register(self, name, provider):
