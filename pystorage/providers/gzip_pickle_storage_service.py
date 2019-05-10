@@ -1,5 +1,5 @@
-from os import remove
-from os.path import join, isfile
+from os import remove, makedirs
+from os.path import join, isfile, dirname
 from sys import exc_info
 from six import reraise
 from glob import glob
@@ -54,6 +54,7 @@ class GZipPickleStorageService(StorageService):
         """
         filename = join(self.path, '{}.{}'.format(key, self.suffix))
         try:
+            makedirs(dirname(filename), exist_ok=True)
             with gzip.open(filename, 'wb') as pf:
                 dump(value, pf, protocol=HIGHEST_PROTOCOL)
         except (KeyError, IOError, PickleError):

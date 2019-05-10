@@ -26,11 +26,12 @@ class S3StorageService(StorageService):
         :param key: string|numeric value used as unique key.
         :raise KeyError if the key/file was not found
         """
+        s3_key = '{}{}'.format(self.folder, key)
         try:
-            obj = self.bucket.Object('{}{}'.format(self.folder, key))
+            obj = self.bucket.Object(s3_key)
             return obj.get()['Body'].read()
         except Exception:
-            reraise(KeyError, KeyError("Error opening the content from S3"), exc_info()[2])
+            reraise(KeyError, KeyError("Error opening the content from: {}".format(s3_key)), exc_info()[2])
 
     def __setitem__(self, key, value):
         """

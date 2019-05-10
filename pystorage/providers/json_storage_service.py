@@ -1,6 +1,6 @@
+from os import remove, makedirs
+from os.path import join, isfile, dirname
 import json
-from os import remove
-from os.path import join, isfile
 from sys import exc_info
 from six import reraise
 from glob import glob
@@ -51,6 +51,7 @@ class JSONStorageService(StorageService):
         """
         filename = join(self.path, '{}.{}'.format(key, self.suffix))
         try:
+            makedirs(dirname(filename), exist_ok=True)
             with open(filename, 'w') as pf:
                 json.dump(value, pf)
         except (KeyError, IOError, UnicodeDecodeError):
