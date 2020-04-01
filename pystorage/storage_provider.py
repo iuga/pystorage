@@ -6,6 +6,8 @@ from pystorage.providers.json_storage_service import JSONStorageService
 from pystorage.providers.pickle_storage_service import PickleStorageService
 from pystorage.providers.s3_storage_service import S3StorageService
 from pystorage.providers.disklru_storage_service import DiskLRUStorageService
+from pystorage.providers.redis_storage_service import RedisStorageService
+from pystorage.providers.redis_json_storage_service import RedisJSONStorageService
 
 
 class StorageProvider(object):
@@ -23,6 +25,8 @@ class StorageProvider(object):
     STORAGE_VOLATILE = 'storage.volatile'
     STORAGE_S3 = 'storage.s3'
     STORAGE_DISKLRU = 'storage.disklru'
+    STORAGE_REDIS = 'storage.redis'
+    STORAGE_REDIS_JSON = 'storage.redis.json'
 
     def __init__(self):
         """
@@ -35,7 +39,9 @@ class StorageProvider(object):
             self.STORAGE_JSON: JSONStorageService,
             self.STORAGE_PICKLE: PickleStorageService,
             self.STORAGE_S3: S3StorageService,
-            self.STORAGE_DISKLRU: DiskLRUStorageService
+            self.STORAGE_DISKLRU: DiskLRUStorageService,
+            self.STORAGE_REDIS: RedisStorageService,
+            self.STORAGE_REDIS_JSON: RedisJSONStorageService
         }
 
     def register(self, name, provider):

@@ -40,6 +40,8 @@ There are a few services that you get out of the box. All of these are contained
 - **S3StorageService** `STORAGE_S3`: This service provides a mechanism for serializing and deserializing a group of binary objects on AWS S3.
 - **DiskLRUStorageService** `STORAGE_DISKLRU`: Set a file count limit and remove the least recently used file when the limit is reached.
 - **VolatileStorageService** `STORAGE_VOLATILE`: Dictionary storage with auto-expiring values for caching purposes. Expiration happens on any access, object is locked during cleanup from expired values.
+- **RedisStorageService** `STORAGE_REDIS`: In-memory data structure store, used as a database, cache and message broker on plain text.
+- **RedisJSONStorageService** `STORAGE_REDIS`: In-memory data structure store, used as a database, cache and message broker on json format.
 
 ## Use-Case: Simple Storage
 Let's store our dictionary information in `json` format:
@@ -126,4 +128,23 @@ Special for cases when your local storage is limited, you can use this method to
 ```
 ```
 100
+```
+
+## Use-Case: Store on Redis
+
+```python
+import redis
+
+redis_client = redis.from_url("redis://localhost:6379")
+
+storage = StorageProvider().create(
+    StorageProvider.STORAGE_REDIS,
+    redis_client=redis_client
+)
+
+>>> storage['key'] = 'value'
+>>> storage['key']
+```
+```
+'value'
 ```
